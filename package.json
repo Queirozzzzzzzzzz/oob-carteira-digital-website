@@ -1,0 +1,19 @@
+{
+  "name": "oob-carteira-digital",
+  "version": "1.0.0",
+  "description": "Sistema de admnistração de carteiras digitais para o SENAI.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev"
+  },
+  "author": "OutOfBox",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  },
+  "dependencies": {
+    "jest": "^29.7.0",
+    "mysql2": "^3.9.3",
+    "next": "^14.1.4"
+  }
+}
