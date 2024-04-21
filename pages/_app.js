@@ -1,9 +1,12 @@
 import "/components/css/index.css";
 import Layout from "/components/layout.js";
 import { useEffect } from "react";
+import { Toaster } from "sonner";
+import { useRouter } from "next/router";
 
 export default function MyApp({ Component, pageProps }) {
-  // Navbar
+  const router = useRouter();
+
   useEffect(() => {
     const toggleNavbarItems = () => {
       const navbarItem = document.querySelector("#navbar-icon");
@@ -35,6 +38,14 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <Layout>
+      <Toaster />
+      {router.pathname !== "/" && ( // Conditionally render the menu
+        <div className="menu">
+          <a href="/notification">Notificações</a>
+          <a href="/account">Usuários</a>
+          <a href="/api/v1/account/signout">Sair</a>
+        </div>
+      )}
       <Component {...pageProps} />
     </Layout>
   );

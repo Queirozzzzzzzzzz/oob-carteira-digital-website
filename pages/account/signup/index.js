@@ -1,15 +1,13 @@
-function Update() {
+export default function Signup() {
   return (
     <>
-      <div className="menu">
-        <a href="/notification">Notificações</a>
-        <a href="/user">Usuários</a>
-        <a href="/">Sair</a>
-      </div>
-      <h1>Atualizar Informações de Usuário</h1>
-      <form action="" className="user-signup">
-        <label htmlFor="name">Nome</label>
-        <input type="text" id="name" name="name" required />
+      <h1>Cadastrar Usuário</h1>
+      <form action="/api/v1/account/create" className="user-signup">
+        <label htmlFor="isStudent">Estudante</label>
+        <input type="checkbox" id="isStudent" name="isStudent" required></input>
+
+        <label htmlFor="full_name">Nome</label>
+        <input type="text" id="full_name" name="full_name" required />
 
         <label htmlFor="email">Email</label>
         <input type="email" id="email" name="email" required />
@@ -50,5 +48,3 @@ function Update() {
     </>
   );
 }
-
-module.exports = Update;

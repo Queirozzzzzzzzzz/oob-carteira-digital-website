@@ -1,11 +1,11 @@
-import database from "/infra/database";
+import status from "models/status";
 
 export default async function Status(req, res) {
   try {
     const updatedAt = new Date().toISOString();
-    const mysqlVersionValue = await database.getVersion();
-    const maxConnectionsValue = await database.getMaxConnections();
-    const openedConnectionsValue = await database.getOpenedConnections();
+    const mysqlVersionValue = await status.getVersion();
+    const maxConnectionsValue = await status.getMaxConnections();
+    const openedConnectionsValue = await status.getOpenedConnections();
 
     res.status(200).json({
       updated_at: updatedAt,
@@ -21,6 +21,6 @@ export default async function Status(req, res) {
     console.error(error);
     res
       .status(500)
-      .send({ message: "An error occurred while processing your request." });
+      .send({ message: "Um erro ocorreu ao processar seu pedido." });
   }
 }

@@ -1,12 +1,7 @@
-function Signup() {
+export default function Update() {
   return (
     <>
-      <div className="menu">
-        <a href="/notification">Notificações</a>
-        <a href="/user">Usuários</a>
-        <a href="/">Sair</a>
-      </div>
-      <h1>Cadastrar Usuário</h1>
+      <h1>Atualizar Informações de Usuário</h1>
       <form action="" className="user-signup">
         <label htmlFor="name">Nome</label>
         <input type="text" id="name" name="name" required />
@@ -50,5 +45,3 @@ function Signup() {
     </>
   );
 }
-
-module.exports = Signup;

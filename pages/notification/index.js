@@ -1,11 +1,6 @@
-function Notification() {
+export default function Notification(req, res) {
   return (
     <>
-      <div className="menu">
-        <a href="/notification">Notificações</a>
-        <a href="/user">Usuários</a>
-        <a href="/">Sair</a>
-      </div>
       <h1>Enviar Notificações</h1>
       <form action="" className="notify">
         <label htmlFor="name">Nome:</label>
@@ -22,5 +17,3 @@ function Notification() {
     </>
   );
 }
-
-module.exports = Notification;

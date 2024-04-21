@@ -6,7 +6,7 @@ export default function Layout({ children }) {
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>oob-carteira-digital</title>
+        <title>Carteira Digital</title>
         <link rel="icon" href="/static/img/icon.ico" />
       </Head>
       {children}
