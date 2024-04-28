@@ -24,7 +24,7 @@ export default async function Signin(req, res) {
           httpOnly: true,
           secure: process.env.NODE_ENV !== "development",
           maxAge: 60 * 60,
-          sameSite: "strict",
+          sameSite: "none",
           path: "/",
         })
       );
