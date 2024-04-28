@@ -13,7 +13,7 @@ async function query(queryString, params) {
   try {
     [rows] = await connection.execute(queryString, params);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw err;
   } finally {
     await connection.end();
@@ -21,6 +21,23 @@ async function query(queryString, params) {
   return rows;
 }
 
+async function transaction(queries) {
+  const connection = await mysql.createConnection(configurations);
+  try {
+    await connection.query("START TRANSACTION");
+    for (const query of queries) {
+      await connection.execute(query.queryString, query.params);
+    }
+    await connection.query("COMMIT");
+  } catch (error) {
+    await connection.query("ROLLBACK");
+    throw error;
+  } finally {
+    await connection.end();
+  }
+}
+
 module.exports = Object.freeze({
   query,
+  transaction,
 });

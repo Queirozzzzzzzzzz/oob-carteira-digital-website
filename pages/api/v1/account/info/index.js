@@ -2,13 +2,19 @@ import account from "models/account";
 
 export default async function Information(req, res) {
   try {
-    const info = await account.getInfo(req.body.cpf);
+    const result = await account.getInfo(req.body.cpf);
 
-    res.status(200).json({ info });
-  } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .send({ message: "Um erro ocorreu ao processar seu pedido." });
+    if (Object.prototype.toString.call(result) == "[object Object]") {
+      res.status(200).json({ result });
+    } else {
+      res
+        .writeHead(302, {
+          Location: `/account?message=${encodeURIComponent("error " + result)}`,
+        })
+        .end();
+    }
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 }

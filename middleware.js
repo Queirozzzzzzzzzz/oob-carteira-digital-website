@@ -19,7 +19,6 @@ export async function middleware(req, res) {
     if (req.nextUrl.pathname === "/") {
       return NextResponse.next();
     }
-    console.log(err);
     const response = NextResponse.redirect(new URL("/", req.url));
     response.cookies.delete("token");
     return response;

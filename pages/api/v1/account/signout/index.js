@@ -12,5 +12,5 @@ export default async function Signout(req, res) {
     })
   );
 
-  return res.redirect("/");
+  res.writeHead(302, { Location: "/" }).end();
 }

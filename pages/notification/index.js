@@ -6,8 +6,7 @@ export default function Notification(req, res) {
         <label htmlFor="name">Nome:</label>
         <input type="text" id="name" name="name" required />
 
-        <label htmlFor="email">Email:</label>
-        <input type="email" id="email" name="email" required />
+        <label htmlFor="">Destinatários:</label>
 
         <label htmlFor="message">Mensagem:</label>
         <textarea id="message" name="message" required></textarea>

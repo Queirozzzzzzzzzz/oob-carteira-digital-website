@@ -1,17 +1,10 @@
 export default function Account() {
   return (
     <>
-      <div className="section">
+      <div className="section btn">
         <a href="/account/signup">Cadastrar Usuário</a>
+        <a href="/account/update">Editar Usuário</a>
       </div>
-      <h1>Encontrar Usuário</h1>
-      <form action="/account/update" className="user-search">
-        <label htmlFor="name">E-mail ou CPF</label>
-        <input type="text" id="name" name="name" required />
-
-        <button type="submit">Buscar</button>
-      </form>
-      ;
     </>
   );
 }

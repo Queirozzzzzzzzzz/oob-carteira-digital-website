@@ -17,8 +17,8 @@ export default async function Status(req, res) {
         },
       },
     });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     res
       .status(500)
       .send({ message: "Um erro ocorreu ao processar seu pedido." });
