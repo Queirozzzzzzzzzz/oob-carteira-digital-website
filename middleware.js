@@ -1,30 +1,35 @@
 import { NextResponse } from "next/server";
-import { jwtVerify } from "jose";
+import auth from "models/auth";
 
 export async function middleware(req, res) {
-  if (req.nextUrl.pathname === "/api/v1/account/signin") {
-    return NextResponse.next();
-  }
+  const pathname = req.nextUrl.pathname;
+  const isRootPath = pathname === "/";
+  const isSigninPath = pathname === "/api/v1/auth/signin";
+  const isAdminPath =
+    pathname.startsWith("/admin/") || pathname.startsWith("/api/v1/admin");
+
+  if (isSigninPath) return NextResponse.next();
 
   try {
     const token = req.cookies.toString().replace("token=", "");
-    await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET));
+    const result = await auth.getUserPayload(token);
 
-    if (req.nextUrl.pathname === "/") {
-      return NextResponse.redirect(new URL("/notification", req.url));
-    }
+    if (isAdminPath && result.is_admin == 0)
+      return NextResponse.redirect(new URL("/denied", req.url));
+    if (isRootPath)
+      return NextResponse.redirect(new URL("/admin/notification", req.url));
 
     return NextResponse.next();
   } catch (err) {
-    if (req.nextUrl.pathname === "/") {
-      return NextResponse.next();
+    if (!isRootPath) {
+      const response = NextResponse.redirect(new URL("/", req.url));
+      response.cookies.delete("token");
+      return response;
     }
-    const response = NextResponse.redirect(new URL("/", req.url));
-    response.cookies.delete("token");
-    return response;
+    return NextResponse.next();
   }
 }
 
 export const config = {
-  matcher: ["/", "/api/:path*", "/account/:path*", "/notification:path*"],
+  matcher: ["/", "/api/:path*", "/admin/:path*"],
 };

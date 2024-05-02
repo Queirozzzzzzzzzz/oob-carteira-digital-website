@@ -1,16 +1,13 @@
 import account from "models/account";
+import auth from "models/auth";
 
 export default async function Update(req, res) {
   try {
-    const result = await account.updateAccount(req.body);
+    const payload = await auth.getUserPayload(req.cookies.token);
+    const result = await account.updateAccount(req.body, payload);
+    const success = result == "Conta atualizada com sucesso!" ? 200 : 400;
 
-    const message =
-      result == "Conta atualizada com sucesso!" ? "success " : "error ";
-    res
-      .writeHead(302, {
-        Location: `/account/update?message=${encodeURIComponent(message + result)}`,
-      })
-      .end();
+    res.status(success).json(result);
   } catch (err) {
     console.error(err);
     throw err;

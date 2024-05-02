@@ -1,18 +1,13 @@
 import account from "models/account";
+import auth from "models/auth";
 
-export default async function Information(req, res) {
+export default async function Update(req, res) {
   try {
-    const result = await account.getInfo(req.body.cpf);
+    const payload = await auth.getUserPayload(req.cookies.token);
+    const result = await account.getInfo(payload.cpf);
+    const success = !result ? 200 : 400;
 
-    if (Object.prototype.toString.call(result) == "[object Object]") {
-      res.status(200).json({ result });
-    } else {
-      res
-        .writeHead(302, {
-          Location: `/account?message=${encodeURIComponent("error " + result)}`,
-        })
-        .end();
-    }
+    res.status(success).json(result);
   } catch (err) {
     console.error(err);
     throw err;

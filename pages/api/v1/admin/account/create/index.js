@@ -8,7 +8,7 @@ export default async function Add(req, res) {
       result == "Conta criada com sucesso!" ? "success " : "error ";
     res
       .writeHead(302, {
-        Location: `/account/signup?message=${encodeURIComponent(message + result)}`,
+        Location: `/admin/account/signup?message=${encodeURIComponent(message + result)}`,
       })
       .end();
   } catch (err) {

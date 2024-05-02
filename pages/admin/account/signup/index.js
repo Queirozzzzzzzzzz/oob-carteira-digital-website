@@ -12,7 +12,7 @@ export default function Signup() {
       <h1>Cadastrar Usuário</h1>
       <form
         method="POST"
-        action="/api/v1/account/create"
+        action="/api/v1/admin/account/create"
         className="user-signup"
       >
         <label htmlFor="is_admin">ADMIN</label>

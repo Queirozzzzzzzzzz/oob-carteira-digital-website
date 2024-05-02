@@ -41,9 +41,9 @@ export default function MyApp({ Component, pageProps }) {
       <Toaster />
       {router.pathname !== "/" && ( // Conditionally render the menu
         <div className="menu">
-          <a href="/notification">Notificações</a>
-          <a href="/account">Usuários</a>
-          <a href="/api/v1/account/signout">Sair</a>
+          <a href="/admin/notification">Notificações</a>
+          <a href="/admin/account">Usuários</a>
+          <a href="/api/v1/auth/signout">Sair</a>
         </div>
       )}
       <Component {...pageProps} />

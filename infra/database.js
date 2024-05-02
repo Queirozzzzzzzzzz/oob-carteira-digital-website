@@ -1,10 +1,5 @@
 const mysql = require("mysql2/promise");
 
-console.log(process.env.MYSQL_HOST);
-console.log(process.env.MYSQL_USER);
-console.log(process.env.MYSQL_PASSWORD);
-console.log(process.env.MYSQL_DB);
-
 const configurations = {
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,

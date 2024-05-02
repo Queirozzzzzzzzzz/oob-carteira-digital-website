@@ -9,7 +9,7 @@ export default function Update() {
   async function onSubmit(event) {
     event.preventDefault();
     const cpf = event.target.cpf.value;
-    const response = await fetch("/api/v1/account/info", {
+    const response = await fetch("/api/v1/admin/account/info", {
       method: "POST",
       body: new URLSearchParams({ cpf }),
     });
@@ -59,7 +59,7 @@ export default function Update() {
       <h1>Atualizar Informações de Usuário</h1>
       <form
         method="POST"
-        action="/api/v1/account/update"
+        action="/api/v1/admin/account/update"
         className="user-signup"
       >
         <label htmlFor="is_admin">ADMIN</label>
