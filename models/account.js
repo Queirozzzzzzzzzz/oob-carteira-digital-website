@@ -281,8 +281,10 @@ async function signin(cpf, password) {
 
   if (account.length === 0) return "Esta conta não está cadastrada.";
 
-  if (!(await bcrypt.compare(password, account[0].password.toString())))
+  if (!(await bcrypt.compare(password, account[0].password.toString()))) {
+    if (account[0].is_admin == 1) return "admin Senha inválida.";
     return "Senha inválida.";
+  }
 
   if (account[0].status == "suspended" || account[0].status == "inactive")
     return "Esta conta está suspensa ou inativa.";

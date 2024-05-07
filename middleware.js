@@ -15,14 +15,21 @@ export async function middleware(req, res) {
     const result = await auth.getUserPayload(token);
 
     if (isAdminPath && result.is_admin == 0)
-      return NextResponse.redirect(new URL("/denied", req.url));
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+
+    if (isRootPath && result.is_admin == 0)
+      return NextResponse.redirect(new URL("/404", req.url));
+
     if (isRootPath)
       return NextResponse.redirect(new URL("/admin/notification", req.url));
 
     return NextResponse.next();
   } catch (err) {
     if (!isRootPath) {
-      const response = NextResponse.redirect(new URL("/", req.url));
+      const response = NextResponse.json(
+        { error: "Access denied" },
+        { status: 403 }
+      );
       response.cookies.delete("token");
       return response;
     }

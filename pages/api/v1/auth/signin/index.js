@@ -39,10 +39,15 @@ export default async function Signin(req, res) {
 
     res.status(200).json({ logged: true });
   } else {
-    res
-      .writeHead(302, {
-        Location: `/?message=${encodeURIComponent("error " + result)}`,
-      })
-      .end();
+    if (result.startsWith("admin ")) {
+      if (result.startsWith("admin ")) {
+        res
+          .writeHead(302, {
+            Location: `/?message=${encodeURIComponent("error " + result.replace("admin ", ""))}`,
+          })
+          .end();
+      }
+    }
+    res.status(422).json(result);
   }
 }

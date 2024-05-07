@@ -7,11 +7,7 @@ export default async function Information(req, res) {
     if (Object.prototype.toString.call(result) == "[object Object]") {
       res.status(200).json({ result });
     } else {
-      res
-        .writeHead(302, {
-          Location: `/admin/account?message=${encodeURIComponent("error " + result)}`,
-        })
-        .end();
+      res.status(500).json({result})
     }
   } catch (err) {
     console.error(err);
