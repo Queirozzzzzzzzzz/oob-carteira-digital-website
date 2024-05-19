@@ -8,7 +8,7 @@ export default async function Update(req, res) {
       result == "Conta atualizada com sucesso!" ? "success " : "error ";
     res
       .writeHead(302, {
-        Location: `/admin/account/update?message=${encodeURIComponent(message + result)}`,
+        Location: `/admin/accounts/update?message=${encodeURIComponent(message + result)}`,
       })
       .end();
   } catch (err) {

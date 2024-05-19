@@ -27,14 +27,14 @@ export default async function Signin(req, res) {
       cookie.serialize("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV !== "development",
-        maxAge: 60 * 60,
+        maxAge: process.env.AUTH_EXPIRATION_TIME,
         sameSite: "lax",
         path: "/",
       })
     );
 
     if (result.is_admin == 1) {
-      res.writeHead(302, { Location: "/admin/notification" }).end();
+      res.status(200).json({ admin_logged: true });
     }
 
     res.status(200).json({ logged: true });

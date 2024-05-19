@@ -26,10 +26,11 @@ export async function middleware(req, res) {
     return NextResponse.next();
   } catch (err) {
     if (!isRootPath) {
-      const response = NextResponse.json(
-        { error: "Access denied" },
-        { status: 403 }
-      );
+      const response =
+        req.method === "GET"
+          ? NextResponse.redirect(new URL("/", req.url))
+          : NextResponse.json({ error: "Access denied" }, { status: 403 });
+
       response.cookies.delete("token");
       return response;
     }

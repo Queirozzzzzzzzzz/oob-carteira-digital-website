@@ -17,14 +17,14 @@ const SELECT_INFO_BY_CPF_QUERY = `
 const INSERT_ACCOUNT_QUERY =
   "INSERT INTO account ( is_admin, is_student, full_name, email, password, birth_date, cpf, institution, status ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? );";
 const INSERT_STUDENT_QUERY =
-  "INSERT INTO student (account_id, end_date, registration, level, course, `class`) VALUES (?, ?, ?, ?, ?, ?);";
+  "INSERT INTO student (account_id, end_date, registration, level, courses) VALUES (?, ?, ?, ?, ?);";
 const DELETE_STUDENT_QUERY = "DELETE FROM student WHERE account_id = ?;";
 const SELECT_ACCOUNT_ID_QUERY = "SELECT id FROM account WHERE cpf = ?";
 const UPDATE_ACCOUNT_QUERY =
   "UPDATE account SET is_admin = ?, is_student = ?, full_name = ?, email = ?, birth_date = ?, institution = ?, status = ? WHERE cpf = ?;";
 const UPDATE_STUDENT_QUERY = `
  UPDATE student
- SET end_date = ?, registration = ?, level = ?, course = ?, class = ?
+ SET end_date = ?, registration = ?, level = ?, courses = ?
  WHERE account_id = ?;
 `;
 const UPDATE_ACCOUNT_NON_ADMIN_QUERY =
@@ -33,7 +33,7 @@ const UPDATE_PASSWORD_QUERY = "UPDATE account SET password = ? WHERE cpf = ?;";
 const UPDATE_LAST_LOGIN_QUERY =
   "UPDATE account SET last_login = CURRENT_TIMESTAMP WHERE cpf = ?;";
 const DELETE_ACCOUNT_FROM_ACCOUNT_ID_QUERY =
-  "DELETE FROM account WHERE account_id = ?;";
+  "DELETE FROM account WHERE id = ?;";
 const SELECT_STUDENT_FROM_ACCOUNT_ID_QUERY =
   "SELECT * FROM student WHERE account_id = ?";
 
@@ -95,8 +95,7 @@ async function addAccount(accountDetails) {
     end_date,
     registration,
     level,
-    course,
-    class: classValue,
+    coursesIds,
   } = accountDetails;
 
   if (Object.prototype.toString.call(await getInfo(cpf)) == "[object Object]")
@@ -104,6 +103,16 @@ async function addAccount(accountDetails) {
 
   const isAdmin = is_admin == "on" ? "1" : "0";
   const isStudent = is_student == "on" ? "1" : "0";
+
+  let courses = "";
+  if (isStudent == "1") {
+    if (!registration || !level) {
+      return "Todos os campos devem estar preenchidos.";
+    }
+    if (coursesIds) {
+      courses = getCourses(coursesIds);
+    }
+  }
 
   const hashedPassword = await bcrypt.hash(password, passwordSaltRounds);
 
@@ -119,25 +128,21 @@ async function addAccount(accountDetails) {
     status,
   ]);
 
-  if (isStudent) {
-    if (!registration || !level || !course || !classValue) {
-      return "Todos os campos devem estar preenchidos.";
-    }
-
+  if (isStudent == "1") {
     try {
       await database.query(INSERT_STUDENT_QUERY, [
         result.insertId,
         end_date,
         registration,
         level,
-        course,
-        classValue,
+        courses,
       ]);
     } catch (err) {
       await database.query(DELETE_ACCOUNT_FROM_ACCOUNT_ID_QUERY, [
         result.insertId,
       ]);
-      throw err;
+      console.error(err);
+      return "Não foi possível criar a conta de estudante.";
     }
   }
 
@@ -158,10 +163,8 @@ async function adminUpdateAccount(accountDetails) {
     end_date,
     registration,
     level,
-    course,
-    class: classValue,
+    coursesIds,
   } = accountDetails;
-
   const isAdmin = is_admin == "on" ? "1" : "0";
   const isStudent = is_student == "on" ? "1" : "0";
 
@@ -171,7 +174,7 @@ async function adminUpdateAccount(accountDetails) {
     if (result.length > 0) {
       accountId = result[0].id;
     } else {
-      throw new Error("Account not found");
+      return "Conta não foi encontrada";
     }
   } catch (error) {
     console.error("Failed to fetch account_id:", error);
@@ -202,7 +205,13 @@ async function adminUpdateAccount(accountDetails) {
     ],
   });
 
-  if (isStudent == 1) {
+  if (isStudent == "1") {
+    let courses = "";
+
+    if (coursesIds) {
+      courses = getCourses(coursesIds);
+    }
+
     const studentExists = await database.query(
       SELECT_STUDENT_FROM_ACCOUNT_ID_QUERY,
       [accountId]
@@ -211,12 +220,12 @@ async function adminUpdateAccount(accountDetails) {
     if (studentExists.length > 0) {
       queries.push({
         queryString: UPDATE_STUDENT_QUERY,
-        params: [end_date, registration, level, course, classValue, accountId],
+        params: [end_date, registration, level, courses, accountId],
       });
     } else {
       queries.push({
         queryString: INSERT_STUDENT_QUERY,
-        params: [accountId, end_date, registration, level, course, classValue],
+        params: [accountId, end_date, registration, level, courses],
       });
     }
   } else {
@@ -292,6 +301,28 @@ async function signin(cpf, password) {
   await database.query(UPDATE_LAST_LOGIN_QUERY, [cpf]);
   account = await database.query(SELECT_ACCOUNT_FROM_CPF_QUERY, [cpf]);
   return account[0];
+}
+
+// Private functions
+
+function getCourses(coursesIds) {
+  let courses = "";
+  let temporaryCourses = [];
+  const ids = coursesIds.split(",");
+
+  for (let i = 0; i < ids.length; i++) {
+    const currentId = ids[i].trim();
+
+    if (!temporaryCourses.includes(currentId)) {
+      temporaryCourses.push(currentId);
+
+      courses += currentId;
+      if (i < ids.length - 1) {
+        courses += ",";
+      }
+    }
+  }
+  return courses;
 }
 
 module.exports = {

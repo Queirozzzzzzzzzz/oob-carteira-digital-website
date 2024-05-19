@@ -42,7 +42,8 @@ export default function MyApp({ Component, pageProps }) {
       {router.pathname !== "/" && ( // Conditionally render the menu
         <div className="menu">
           <a href="/admin/notification">Notificações</a>
-          <a href="/admin/account">Usuários</a>
+          <a href="/admin/accounts">Usuários</a>
+          <a href="/admin/courses">Cursos</a>
           <a href="/api/v1/auth/signout">Sair</a>
         </div>
       )}

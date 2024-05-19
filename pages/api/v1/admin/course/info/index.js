@@ -1,10 +1,10 @@
-import account from "models/account";
+import { getInfo } from "models/course";
 
 export default async function Information(req, res) {
   try {
-    const result = await account.getInfo(req.body.cpf);
+    const result = await getInfo(req.body.id);
 
-    if (Object.prototype.toString.call(result) == "[object Object]") {
+    if (typeof result == "object") {
       res.status(200).json({ result });
     } else {
       res.status(500).json({ result });
