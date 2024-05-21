@@ -1,4 +1,4 @@
-import database from "infra/database";
+import { query } from "infra/database";
 
 const SELECT_INFO_BY_ID_QUERY = "SELECT * FROM course WHERE id = ?";
 const INSERT_COURSE_QUERY =
@@ -8,12 +8,12 @@ const UPDATE_COURSE_QUERY =
 const REMOVE_COURSE_QUERY = "DELETE FROM course WHERE id = ?;";
 
 async function getAllCourses() {
-  const courses = await database.query("SELECT * FROM course;");
+  const courses = await query("SELECT * FROM course;");
   return courses;
 }
 
 async function getInfo(id) {
-  const info = await database.query(SELECT_INFO_BY_ID_QUERY, [id]);
+  const info = await query(SELECT_INFO_BY_ID_QUERY, [id]);
 
   if (info.length === 0) {
     return "Este curso não foi encontrado.";
@@ -26,7 +26,7 @@ async function addCourse(courseDetails) {
   const { course, c_class } = courseDetails;
 
   try {
-    await database.query(INSERT_COURSE_QUERY, [course, c_class]);
+    await query(INSERT_COURSE_QUERY, [course, c_class]);
     return "Curso adicionado com sucesso!";
   } catch (err) {
     return "Curso não pôde ser criado!";
@@ -37,7 +37,7 @@ async function editCourse(courseDetails) {
   const { id, course, c_class } = courseDetails;
 
   try {
-    await database.query(UPDATE_COURSE_QUERY, [course, c_class, id]);
+    await query(UPDATE_COURSE_QUERY, [course, c_class, id]);
     return "Curso editado com sucesso!";
   } catch (err) {
     return "Curso não pôde ser editado!";
@@ -46,7 +46,7 @@ async function editCourse(courseDetails) {
 
 async function removeCourse(id) {
   try {
-    await database.query(REMOVE_COURSE_QUERY, [id]);
+    await query(REMOVE_COURSE_QUERY, [id]);
     return "Curso removido com sucesso!";
   } catch (err) {
     return "Curso não pôde ser removido!";

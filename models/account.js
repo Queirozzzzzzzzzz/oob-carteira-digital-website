@@ -1,4 +1,4 @@
-import database from "infra/database";
+import { query, transaction } from "infra/database";
 import bcrypt from "bcrypt";
 const passwordSaltRounds = 10;
 
@@ -39,7 +39,7 @@ const SELECT_STUDENT_FROM_ACCOUNT_ID_QUERY =
 
 // FUNCTIONS
 async function getAccountsInfo() {
-  const info = await database.query(SELECT_ACCOUNTS_INFO_QUERY);
+  const info = await query(SELECT_ACCOUNTS_INFO_QUERY);
 
   info.forEach((row) => {
     if (row.account_id == null) {
@@ -57,7 +57,7 @@ async function getAccountsInfo() {
 }
 
 async function getStudentsInfo() {
-  const info = await database.query(SELECT_STUDENTS_INFO_QUERY);
+  const info = await query(SELECT_STUDENTS_INFO_QUERY);
 
   info.forEach((row) => {
     delete row.account_id;
@@ -68,7 +68,7 @@ async function getStudentsInfo() {
 }
 
 async function getInfo(cpf) {
-  const info = await database.query(SELECT_INFO_BY_CPF_QUERY, [cpf]);
+  const info = await query(SELECT_INFO_BY_CPF_QUERY, [cpf]);
 
   if (info.length === 0) {
     return "Esta conta não foi encontrada.";
@@ -117,7 +117,7 @@ async function addAccount(accountDetails) {
 
   const hashedPassword = await bcrypt.hash(password, passwordSaltRounds);
 
-  const result = await database.query(INSERT_ACCOUNT_QUERY, [
+  const result = await query(INSERT_ACCOUNT_QUERY, [
     isAdmin,
     isStudent,
     full_name,
@@ -131,7 +131,7 @@ async function addAccount(accountDetails) {
 
   if (isStudent == "1") {
     try {
-      await database.query(INSERT_STUDENT_QUERY, [
+      await query(INSERT_STUDENT_QUERY, [
         result.insertId,
         end_date,
         registration,
@@ -139,9 +139,7 @@ async function addAccount(accountDetails) {
         courses,
       ]);
     } catch (err) {
-      await database.query(DELETE_ACCOUNT_FROM_ACCOUNT_ID_QUERY, [
-        result.insertId,
-      ]);
+      await query(DELETE_ACCOUNT_FROM_ACCOUNT_ID_QUERY, [result.insertId]);
       console.error(err);
       return "Não foi possível criar a conta de estudante.";
     }
@@ -171,7 +169,7 @@ async function adminUpdateAccount(accountDetails) {
 
   let accountId;
   try {
-    const result = await database.query(SELECT_ACCOUNT_ID_QUERY, [cpf]);
+    const result = await query(SELECT_ACCOUNT_ID_QUERY, [cpf]);
     if (result.length > 0) {
       accountId = result[0].id;
     } else {
@@ -213,10 +211,9 @@ async function adminUpdateAccount(accountDetails) {
       courses = getCourses(coursesIds);
     }
 
-    const studentExists = await database.query(
-      SELECT_STUDENT_FROM_ACCOUNT_ID_QUERY,
-      [accountId]
-    );
+    const studentExists = await query(SELECT_STUDENT_FROM_ACCOUNT_ID_QUERY, [
+      accountId,
+    ]);
 
     if (studentExists.length > 0) {
       queries.push({
@@ -237,7 +234,7 @@ async function adminUpdateAccount(accountDetails) {
   }
 
   try {
-    await database.transaction(queries);
+    await transaction(queries);
   } catch (err) {
     console.error("Transaction failed:", err);
     if (
@@ -271,7 +268,7 @@ async function updateAccount(accountDetails, payload) {
   });
 
   try {
-    await database.transaction(queries);
+    await transaction(queries);
   } catch (err) {
     console.error("Transaction failed:", err);
     if (
@@ -287,7 +284,7 @@ async function updateAccount(accountDetails, payload) {
 }
 
 async function signin(cpf, password) {
-  let account = await database.query(SELECT_ACCOUNT_FROM_CPF_QUERY, [cpf]);
+  let account = await query(SELECT_ACCOUNT_FROM_CPF_QUERY, [cpf]);
 
   if (account.length === 0) return "Esta conta não está cadastrada.";
 
@@ -299,8 +296,8 @@ async function signin(cpf, password) {
   if (account[0].status == "suspended" || account[0].status == "inactive")
     return "Esta conta está suspensa ou inativa.";
 
-  await database.query(UPDATE_LAST_LOGIN_QUERY, [cpf]);
-  account = await database.query(SELECT_ACCOUNT_FROM_CPF_QUERY, [cpf]);
+  await query(UPDATE_LAST_LOGIN_QUERY, [cpf]);
+  account = await query(SELECT_ACCOUNT_FROM_CPF_QUERY, [cpf]);
   return account[0];
 }
 
