@@ -76,6 +76,7 @@ async function getInfo(cpf) {
 
   info.forEach((row) => {
     delete row.account_id;
+    delete row.password;
   });
 
   return info[0];
