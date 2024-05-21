@@ -41,10 +41,8 @@ export default function Update() {
       }
 
       setUserInfo(result);
-      result.password = Buffer.from(result.password.data).toString();
       setIsStudent(!!result.registration);
       setIsAdmin(!!result.is_admin);
-
       hideAccountInfoForm();
     } catch (err) {
       alert("A conta não pôde ser encontrada.");
