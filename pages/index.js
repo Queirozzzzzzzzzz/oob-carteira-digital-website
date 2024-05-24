@@ -19,10 +19,23 @@ export default function Login() {
       <h1>Login</h1>
       <form onSubmit={onSubmit} className="login">
         <label htmlFor="cpf">CPF</label>
-        <input type="text" id="cpf" name="cpf" pattern="\d{11}" required />
+        <input
+          type="text"
+          id="cpf"
+          name="cpf"
+          pattern="\d{11}"
+          autoComplete="off"
+          required
+        />
 
         <label htmlFor="password">Senha</label>
-        <input type="password" id="password" name="password" required />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          autoComplete="off"
+          required
+        />
 
         <button type="submit">Entrar</button>
       </form>

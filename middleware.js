@@ -12,12 +12,12 @@ export async function middleware(req, res) {
 
   try {
     const token = req.cookies.toString().replace("token=", "");
-    const result = await auth.getUserPayload(token);
+    const payload = await auth.getUserPayload(token);
 
-    if (isAdminPath && result.is_admin == 0)
+    if (isAdminPath && payload.is_admin == 0)
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
 
-    if (isRootPath && result.is_admin == 0)
+    if (isRootPath && payload.is_admin == 0)
       return NextResponse.redirect(new URL("/404", req.url));
 
     if (isRootPath)

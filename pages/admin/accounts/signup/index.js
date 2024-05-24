@@ -69,6 +69,7 @@ export default function Signup() {
           type="checkbox"
           id="is_admin"
           name="is_admin"
+          autoComplete="off"
           onChange={handleIsAdminChange}
         ></input>
 
@@ -78,26 +79,64 @@ export default function Signup() {
           id="is_student"
           name="is_student"
           checked={isStudent}
+          autoComplete="off"
           onChange={handleIsStudentChange}
         ></input>
 
         <label htmlFor="full_name">Nome</label>
-        <input type="text" id="full_name" name="full_name" required />
+        <input
+          type="text"
+          id="full_name"
+          name="full_name"
+          autoComplete="off"
+          required
+        />
 
         <label htmlFor="email">Email</label>
-        <input type="email" id="email" name="email" required />
+        <input
+          type="email"
+          id="email"
+          name="email"
+          autoComplete="off"
+          required
+        />
 
         <label htmlFor="password">Senha</label>
-        <input type="password" id="password" name="password" required />
+        <input
+          type="password"
+          id="password"
+          name="password"
+          autoComplete="off"
+          required
+        />
 
         <label htmlFor="birth_date">Data de Nascimento</label>
-        <input type="date" id="birth_date" name="birth_date" required />
+        <input
+          type="date"
+          id="birth_date"
+          name="birth_date"
+          autoComplete="off"
+          required
+        />
 
         <label htmlFor="cpf">CPF</label>
-        <input type="text" id="cpf" name="cpf" pattern="\d{11}" required />
+        <input
+          type="text"
+          id="cpf"
+          name="cpf"
+          pattern="\d{11}"
+          autoComplete="off"
+          required
+        />
 
         <label htmlFor="institution">Instituição</label>
-        <input type="text" id="institution" name="institution" required />
+        <input
+          type="text"
+          id="institution"
+          name="institution"
+          autoComplete="off"
+          required
+        />
 
         <label htmlFor="status">Status</label>
         <select id="status" name="status">
@@ -109,11 +148,29 @@ export default function Signup() {
         {isStudent && (
           <>
             <label htmlFor="end_date">Validade da Conta</label>
-            <input type="date" id="end_date" name="end_date" required />
+            <input
+              type="date"
+              id="end_date"
+              name="end_date"
+              autoComplete="off"
+              required
+            />
             <label htmlFor="registration">Matrícula</label>
-            <input type="text" id="registration" name="registration" required />
+            <input
+              type="text"
+              id="registration"
+              name="registration"
+              autoComplete="off"
+              required
+            />
             <label htmlFor="level">Nível</label>
-            <input type="text" id="level" name="level" required />
+            <input
+              type="text"
+              id="level"
+              name="level"
+              autoComplete="off"
+              required
+            />
             {registeredCourses.length > 0 && (
               <>
                 <label htmlFor="course">Curso</label>
@@ -133,6 +190,7 @@ export default function Signup() {
                   name="course"
                   list="courses"
                   value={selectedCourse}
+                  autoComplete="off"
                   onChange={(e) => setSelectedCourse(e.target.value)}
                 />
                 <h3 type="button" onClick={addCourse}>
@@ -145,6 +203,7 @@ export default function Signup() {
                   name="coursesIds"
                   id="coursesIds"
                   value={coursesIds}
+                  autoComplete="off"
                 />
                 <ul>
                   {selectedCourses.map((course) => (

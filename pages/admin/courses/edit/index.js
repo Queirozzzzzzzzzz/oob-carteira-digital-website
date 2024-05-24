@@ -91,6 +91,7 @@ export default function Edit() {
               id="course"
               name="course"
               value={selectedCourse}
+              autoComplete="off"
               onChange={(e) => setSelectedCourse(e.target.value)}
               list="courses"
               required
@@ -106,12 +107,14 @@ export default function Edit() {
               id="id"
               name="id"
               value={courseInfo.id}
+              autoComplete="off"
             ></input>
             <input
               type="text"
               id="course"
               name="course"
               defaultValue={courseInfo.course}
+              autoComplete="off"
             ></input>
 
             <label htmlFor="course">Classe</label>
@@ -120,6 +123,7 @@ export default function Edit() {
               id="c_class"
               name="c_class"
               defaultValue={courseInfo.class}
+              autoComplete="off"
             ></input>
 
             <button type="submit">Salvar</button>
@@ -130,6 +134,7 @@ export default function Edit() {
               id="id"
               name="id"
               value={courseInfo.id}
+              autoComplete="off"
             ></input>
             <button type="submit">Excluir</button>
           </form>

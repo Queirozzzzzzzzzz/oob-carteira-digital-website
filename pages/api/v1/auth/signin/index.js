@@ -8,20 +8,7 @@ export default async function Signin(req, res) {
   const result = await account.signin(cpf, password);
 
   if (Object.prototype.toString.call(result) == "[object Object]") {
-    const secretKey = createSecretKey(process.env.JWT_SECRET, "utf-8");
-    const token = await new SignJWT({
-      id: process.env.JWT_ID,
-      cpf: result.cpf,
-      is_admin: result.is_admin,
-      is_student: result.is_student,
-    })
-      .setProtectedHeader({ alg: "HS256" })
-      .setIssuedAt()
-      .setIssuer(process.env.HOST)
-      .setAudience(process.env.HOST)
-      .setExpirationTime(process.env.JWT_EXPIRATION_TIME)
-      .sign(secretKey);
-
+    const token = await getToken(result);
     res.setHeader(
       "Set-Cookie",
       cookie.serialize("token", token, {
@@ -50,4 +37,22 @@ export default async function Signin(req, res) {
     }
     res.status(422).json(result);
   }
+}
+
+async function getToken(result) {
+  const secretKey = createSecretKey(process.env.JWT_SECRET, "utf-8");
+  const token = await new SignJWT({
+    id: process.env.JWT_ID,
+    cpf: result.cpf,
+    is_admin: result.is_admin,
+    is_student: result.is_student,
+  })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setIssuer(process.env.HOST)
+    .setAudience(process.env.HOST)
+    .setExpirationTime(process.env.JWT_EXPIRATION_TIME)
+    .sign(secretKey);
+
+  return token;
 }

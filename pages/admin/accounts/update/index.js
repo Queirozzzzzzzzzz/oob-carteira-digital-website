@@ -159,7 +159,14 @@ export default function Update() {
         id="account-info-form"
       >
         <label htmlFor="cpf">CPF do Usuário</label>
-        <input type="text" id="cpf" name="cpf" pattern="\d{11}" required />
+        <input
+          type="text"
+          id="cpf"
+          name="cpf"
+          pattern="\d{11}"
+          autoComplete="off"
+          required
+        />
         <button type="submit">Buscar</button>
       </form>
 
@@ -176,6 +183,7 @@ export default function Update() {
           id="is_admin"
           name="is_admin"
           defaultChecked={isAdmin}
+          autoComplete="off"
           onClick={handleClick}
         ></input>
 
@@ -185,6 +193,7 @@ export default function Update() {
           id="is_student"
           name="is_student"
           defaultChecked={isStudent}
+          autoComplete="off"
           onClick={handleClick}
         ></input>
 
@@ -194,6 +203,7 @@ export default function Update() {
           id="full_name"
           name="full_name"
           defaultValue={userInfo.full_name || ""}
+          autoComplete="off"
           required
         />
 
@@ -202,8 +212,8 @@ export default function Update() {
           type="email"
           id="email"
           name="email"
-          autoComplete="false"
           defaultValue={userInfo.email || ""}
+          autoComplete="off"
           required
         />
 
@@ -212,7 +222,7 @@ export default function Update() {
           type="password"
           id="password"
           name="password"
-          autoComplete="false"
+          autoComplete="off"
         />
 
         <label htmlFor="birth_date">Data de Nascimento</label>
@@ -221,6 +231,7 @@ export default function Update() {
           id="birth_date"
           name="birth_date"
           defaultValue={convertDateFormat(userInfo.birth_date) || ""}
+          autoComplete="off"
           required
         />
 
@@ -230,8 +241,9 @@ export default function Update() {
           id="cpf"
           name="cpf"
           value={userInfo.cpf || ""}
-          readOnly
+          autoComplete="off"
           required
+          readOnly
         />
 
         <label htmlFor="institution">Instituição</label>
@@ -240,6 +252,7 @@ export default function Update() {
           id="institution"
           name="institution"
           defaultValue={userInfo.institution || ""}
+          autoComplete="off"
           required
         />
 
@@ -263,6 +276,7 @@ export default function Update() {
               id="end_date"
               name="end_date"
               defaultValue={convertDateFormat(userInfo.end_date) || ""}
+              autoComplete="off"
               required
             />
             <label htmlFor="registration">Matrícula</label>
@@ -271,6 +285,7 @@ export default function Update() {
               id="registration"
               name="registration"
               defaultValue={userInfo.registration || ""}
+              autoComplete="off"
               required={isStudent}
             />
             <label htmlFor="level">Nível</label>
@@ -279,6 +294,7 @@ export default function Update() {
               id="level"
               name="level"
               defaultValue={userInfo.level || ""}
+              autoComplete="off"
               required={isStudent}
             />
             {registeredCourses.length > 0 && (
@@ -300,6 +316,7 @@ export default function Update() {
                   name="course"
                   list="courses"
                   value={selectedCourse}
+                  autoComplete="off"
                   onChange={(e) => setSelectedCourse(e.target.value)}
                 />
                 <h3 type="button" onClick={addCourse}>
@@ -312,6 +329,7 @@ export default function Update() {
                   name="coursesIds"
                   id="coursesIds"
                   value={coursesIds}
+                  autoComplete="off"
                 />
                 <ul>
                   {selectedCourses.map((course) => (
