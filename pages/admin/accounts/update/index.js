@@ -246,6 +246,16 @@ export default function Update() {
           readOnly
         />
 
+        <label htmlFor="registration">Matrícula</label>
+        <input
+          type="text"
+          id="registration"
+          name="registration"
+          defaultValue={userInfo.registration || ""}
+          autoComplete="off"
+          required
+        />
+
         <label htmlFor="institution">Instituição</label>
         <input
           type="text"
@@ -278,15 +288,6 @@ export default function Update() {
               defaultValue={convertDateFormat(userInfo.end_date) || ""}
               autoComplete="off"
               required
-            />
-            <label htmlFor="registration">Matrícula</label>
-            <input
-              type="text"
-              id="registration"
-              name="registration"
-              defaultValue={userInfo.registration || ""}
-              autoComplete="off"
-              required={isStudent}
             />
             <label htmlFor="level">Nível</label>
             <input

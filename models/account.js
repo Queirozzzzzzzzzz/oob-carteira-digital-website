@@ -15,16 +15,16 @@ const SELECT_INFO_BY_CPF_QUERY = `
  WHERE account.cpf = ?;
 `;
 const INSERT_ACCOUNT_QUERY =
-  "INSERT INTO account ( is_admin, is_student, full_name, email, password, birth_date, cpf, institution, status ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? );";
+  "INSERT INTO account ( is_admin, is_student, full_name, email, password, birth_date, cpf, registration, institution, status ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );";
 const INSERT_STUDENT_QUERY =
-  "INSERT INTO student (account_id, end_date, registration, level, courses) VALUES (?, ?, ?, ?, ?);";
+  "INSERT INTO student (account_id, end_date, level, courses) VALUES (?, ?, ?, ?);";
 const DELETE_STUDENT_QUERY = "DELETE FROM student WHERE account_id = ?;";
 const SELECT_ACCOUNT_ID_QUERY = "SELECT id FROM account WHERE cpf = ?";
 const UPDATE_ACCOUNT_QUERY =
   "UPDATE account SET is_admin = ?, is_student = ?, full_name = ?, email = ?, birth_date = ?, institution = ?, status = ? WHERE cpf = ?;";
 const UPDATE_STUDENT_QUERY = `
  UPDATE student
- SET end_date = ?, registration = ?, level = ?, courses = ?
+ SET end_date = ?, level = ?, courses = ?
  WHERE account_id = ?;
 `;
 const UPDATE_ACCOUNT_NON_ADMIN_QUERY =
@@ -44,7 +44,6 @@ async function getAccountsInfo() {
   info.forEach((row) => {
     if (row.account_id == null) {
       delete row.end_date;
-      delete row.registration;
       delete row.level;
       delete row.course;
       delete row.class;
@@ -107,7 +106,7 @@ async function addAccount(accountDetails) {
 
   let courses = "";
   if (isStudent == "1") {
-    if (!registration || !level) {
+    if (!level) {
       return "Todos os campos devem estar preenchidos.";
     }
     if (coursesIds) {
@@ -125,6 +124,7 @@ async function addAccount(accountDetails) {
     hashedPassword,
     birth_date,
     cpf,
+    registration,
     institution,
     status,
   ]);
@@ -134,7 +134,6 @@ async function addAccount(accountDetails) {
       await query(INSERT_STUDENT_QUERY, [
         result.insertId,
         end_date,
-        registration,
         level,
         courses,
       ]);
@@ -218,12 +217,12 @@ async function adminUpdateAccount(accountDetails) {
     if (studentExists.length > 0) {
       queries.push({
         queryString: UPDATE_STUDENT_QUERY,
-        params: [end_date, registration, level, courses, accountId],
+        params: [end_date, level, courses, accountId],
       });
     } else {
       queries.push({
         queryString: INSERT_STUDENT_QUERY,
-        params: [accountId, end_date, registration, level, courses],
+        params: [accountId, end_date, level, courses],
       });
     }
   } else {

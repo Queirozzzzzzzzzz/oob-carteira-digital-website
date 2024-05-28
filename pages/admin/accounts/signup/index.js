@@ -129,6 +129,15 @@ export default function Signup() {
           required
         />
 
+        <label htmlFor="registration">Matrícula</label>
+        <input
+          type="text"
+          id="registration"
+          name="registration"
+          autoComplete="off"
+          required
+        />
+
         <label htmlFor="institution">Instituição</label>
         <input
           type="text"
@@ -152,14 +161,6 @@ export default function Signup() {
               type="date"
               id="end_date"
               name="end_date"
-              autoComplete="off"
-              required
-            />
-            <label htmlFor="registration">Matrícula</label>
-            <input
-              type="text"
-              id="registration"
-              name="registration"
               autoComplete="off"
               required
             />
