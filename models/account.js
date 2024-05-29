@@ -167,7 +167,6 @@ async function adminUpdateAccount(accountDetails) {
     institution,
     status,
     end_date,
-    registration,
     level,
     coursesIds,
   } = accountDetails;
@@ -341,7 +340,7 @@ async function getDatabaseCourses(coursesIds) {
     });
   }
 
-  return courses;
+  return JSON.stringify(courses);
 }
 
 module.exports = {
