@@ -1,4 +1,5 @@
 import { query, transaction } from "infra/database";
+import course from "models/course";
 import bcrypt from "bcrypt";
 const passwordSaltRounds = 10;
 
@@ -73,10 +74,17 @@ async function getInfo(cpf) {
     return "Esta conta não foi encontrada.";
   }
 
+  let coursesIds = [];
   info.forEach((row) => {
+    if (row.courses) {
+      row.courses = row.courses.replace(",", "");
+      coursesIds = row.courses;
+    }
     delete row.account_id;
     delete row.password;
   });
+
+  info[0].courses = await getDatabaseCourses(coursesIds);
 
   return info[0];
 }
@@ -319,6 +327,20 @@ function getCourses(coursesIds) {
       }
     }
   }
+  return courses;
+}
+
+async function getDatabaseCourses(coursesIds) {
+  let courses = [];
+  for (const id of coursesIds) {
+    const c = await course.getInfo(id);
+    courses.push({
+      id: c.id,
+      course: c.course,
+      class: c.class,
+    });
+  }
+
   return courses;
 }
 
