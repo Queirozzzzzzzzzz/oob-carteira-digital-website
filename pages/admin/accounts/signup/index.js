@@ -135,6 +135,7 @@ export default function Signup() {
           id="registration"
           name="registration"
           autoComplete="off"
+          pattern="\d{8}"
           required
         />
 

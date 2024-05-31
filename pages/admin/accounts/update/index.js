@@ -253,6 +253,7 @@ export default function Update() {
           name="registration"
           defaultValue={userInfo.registration || ""}
           autoComplete="off"
+          pattern="\d{8}"
           required
         />
 
