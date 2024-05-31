@@ -51,17 +51,22 @@ async function getAllNotifications() {
 }
 
 async function getAccountNotifications(id) {
-  const notifications = await query(SELECT_NOTIFICATIONS_FROM_USER_ID_QUERY, [
-    id,
-  ]);
+  try {
+    const notifications = await query(SELECT_NOTIFICATIONS_FROM_USER_ID_QUERY, [
+      id,
+    ]);
 
-  await query(UPDATE_ACCOUNT_NOTIFICATION_SENT_QUERY, [id]);
+    await query(UPDATE_ACCOUNT_NOTIFICATION_SENT_QUERY, [id]);
 
-  notifications.forEach((row) => {
-    delete row.users_receivers_ids;
-  });
+    notifications.forEach((row) => {
+      delete row.users_receivers_ids;
+    });
 
-  return notifications;
+    return notifications;
+  } catch (err) {
+    console.error(err.message);
+    return "";
+  }
 }
 
 module.exports = {
