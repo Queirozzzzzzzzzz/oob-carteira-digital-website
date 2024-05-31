@@ -144,6 +144,7 @@ export default function Signup() {
           id="institution"
           name="institution"
           autoComplete="off"
+          defaultValue={"Escola Senai 'Hermenegildo Campos de Almeida'"}
           required
         />
 
@@ -164,11 +165,20 @@ export default function Signup() {
               autoComplete="off"
               required
             />
+            <datalist id="levelList">
+              <option
+                key={1}
+                value={"Itinerário de Formação Técnica e Profissional"}
+              >
+                Itinerário de Formação Técnica e Profissional
+              </option>
+            </datalist>
             <label htmlFor="level">Nível</label>
             <input
-              type="text"
+              type="list"
               id="level"
               name="level"
+              list="levelList"
               autoComplete="off"
               required
             />

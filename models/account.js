@@ -37,6 +37,8 @@ const DELETE_ACCOUNT_FROM_ACCOUNT_ID_QUERY =
   "DELETE FROM account WHERE id = ?;";
 const SELECT_STUDENT_FROM_ACCOUNT_ID_QUERY =
   "SELECT * FROM student WHERE account_id = ?";
+const SELECT_STUDENT_COURSES_IDS_BY_ACCOUNT_ID_QUERY =
+  "SELECT courses FROM student WHERE account_id = ?;";
 
 // FUNCTIONS
 async function getAccountsInfo() {
@@ -87,6 +89,14 @@ async function getInfo(cpf) {
   info[0].courses = await getDatabaseCourses(coursesIds);
 
   return info[0];
+}
+
+async function getCoursesIds(id) {
+  const result = await query(SELECT_STUDENT_COURSES_IDS_BY_ACCOUNT_ID_QUERY, [
+    id,
+  ]);
+
+  return result[0].courses.split(",");
 }
 
 async function addAccount(accountDetails) {
@@ -347,6 +357,7 @@ module.exports = {
   getAccountsInfo,
   getStudentsInfo,
   getInfo,
+  getCoursesIds,
   addAccount,
   adminUpdateAccount,
   updateAccount,

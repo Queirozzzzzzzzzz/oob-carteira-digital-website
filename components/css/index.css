@@ -29,6 +29,10 @@ button:hover {
   filter: contrast(200%);
 }
 
+p {
+  color: var(--secondary-color);
+}
+
 .hidden {
   display: none;
 }
@@ -121,6 +125,11 @@ form h3 {
   cursor: pointer;
 }
 
+form h4 {
+  color: white;
+  font-size: 1.25rem;
+}
+
 form li {
   display: flex;
   align-items: center;
@@ -140,6 +149,20 @@ form li h3 {
 
 .notify input {
   padding: 0.25rem;
+}
+
+#label-subtitle {
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+#label-subtitle label {
+  margin: 0;
+}
+
+#label-subtitle p {
+  margin-left: 0.5rem;
 }
 
 .alert {
