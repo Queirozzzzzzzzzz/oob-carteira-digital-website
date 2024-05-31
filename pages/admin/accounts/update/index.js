@@ -254,6 +254,7 @@ export default function Update() {
           defaultValue={userInfo.registration || ""}
           autoComplete="off"
           pattern="\d{8}"
+          readOnly
           required
         />
 
