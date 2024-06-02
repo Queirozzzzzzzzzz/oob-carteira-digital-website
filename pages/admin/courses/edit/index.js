@@ -42,10 +42,22 @@ export default function Edit() {
   }
 
   class Course {
-    constructor(id, course, classStr) {
+    constructor(id, course, classStr, enter_time, leave_time, end_date, days) {
       this.id = id;
       this.course = course;
       this.class = classStr;
+      this.enter_time = enter_time;
+      this.leave_time = leave_time;
+      this.end_date = end_date;
+      this.days = getDays(days);
+    }
+  }
+
+  function getDays(days) {
+    if (days.includes(",")) {
+      return days.split(",");
+    } else {
+      return [days];
     }
   }
 
@@ -54,15 +66,36 @@ export default function Edit() {
     if (response.status === 200) {
       const data = await response.json();
       const courses = data.result.map(
-        (course) => new Course(course.id, course.course, course.class)
+        (course) =>
+          new Course(
+            course.id,
+            course.course,
+            course.class,
+            course.enter_time,
+            course.leave_time,
+            course.end_date,
+            course.days
+          )
       );
       setRegisteredCourses(courses);
     }
   }
 
+  const convertDateFormat = (dateString) => dateString?.split("T")[0];
+
   useEffect(() => {
     getRegisteredCourses();
   }, []);
+
+  const daysOfWeek = [
+    "Domingo",
+    "Segunda",
+    "Terça",
+    "Quarta",
+    "Quinta",
+    "Sexta",
+    "Sábado",
+  ];
 
   return (
     <>
@@ -116,7 +149,6 @@ export default function Edit() {
               defaultValue={courseInfo.course}
               autoComplete="off"
             ></input>
-
             <label htmlFor="course">Classe</label>
             <input
               type="text"
@@ -125,7 +157,48 @@ export default function Edit() {
               defaultValue={courseInfo.class}
               autoComplete="off"
             ></input>
-
+            <label htmlFor="class">Horário de Entrada</label>
+            <input
+              type="time"
+              id="enter_time"
+              name="enter_time"
+              autoComplete="off"
+              defaultValue={courseInfo.enter_time}
+              required
+            ></input>
+            <label htmlFor="class">Horário de Saída</label>
+            <input
+              type="time"
+              id="leave_time"
+              name="leave_time"
+              autoComplete="off"
+              defaultValue={courseInfo.leave_time}
+              required
+            ></input>
+            <label htmlFor="class">Término do Curso</label>
+            <input
+              type="date"
+              id="end_date"
+              name="end_date"
+              autoComplete="off"
+              defaultValue={convertDateFormat(courseInfo.end_date) || ""}
+              required
+            ></input>
+            <fieldset>
+              <label>Dias</label>
+              {daysOfWeek.map((day, index) => (
+                <div key={index}>
+                  <input
+                    type="checkbox"
+                    id={`day-${index}`}
+                    name="days"
+                    value={day}
+                    defaultChecked={courseInfo?.days?.includes(day)}
+                  />
+                  <label htmlFor={`day-${index}`}>{day}</label>
+                </div>
+              ))}
+            </fieldset>
             <button type="submit">Salvar</button>
           </form>
           <form method="POST" action="/api/v1/admin/course/remove">

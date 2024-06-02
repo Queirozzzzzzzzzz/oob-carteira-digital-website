@@ -18,14 +18,14 @@ const SELECT_INFO_BY_CPF_QUERY = `
 const INSERT_ACCOUNT_QUERY =
   "INSERT INTO account ( is_admin, is_student, full_name, email, password, birth_date, cpf, registration, institution, status ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );";
 const INSERT_STUDENT_QUERY =
-  "INSERT INTO student (account_id, end_date, level, courses) VALUES (?, ?, ?, ?);";
+  "INSERT INTO student (account_id, level, courses) VALUES (?, ?, ?);";
 const DELETE_STUDENT_QUERY = "DELETE FROM student WHERE account_id = ?;";
 const SELECT_ACCOUNT_ID_QUERY = "SELECT id FROM account WHERE cpf = ?";
 const UPDATE_ACCOUNT_QUERY =
   "UPDATE account SET is_admin = ?, is_student = ?, full_name = ?, email = ?, birth_date = ?, institution = ?, status = ? WHERE cpf = ?;";
 const UPDATE_STUDENT_QUERY = `
  UPDATE student
- SET end_date = ?, level = ?, courses = ?
+ SET level = ?, courses = ?
  WHERE account_id = ?;
 `;
 const UPDATE_ACCOUNT_NON_ADMIN_QUERY =
@@ -46,7 +46,6 @@ async function getAccountsInfo() {
 
   info.forEach((row) => {
     if (row.account_id == null) {
-      delete row.end_date;
       delete row.level;
       delete row.course;
       delete row.class;
@@ -110,7 +109,6 @@ async function addAccount(accountDetails) {
     cpf,
     institution,
     status,
-    end_date,
     registration,
     level,
     coursesIds,
@@ -149,12 +147,7 @@ async function addAccount(accountDetails) {
 
   if (isStudent == "1") {
     try {
-      await query(INSERT_STUDENT_QUERY, [
-        result.insertId,
-        end_date,
-        level,
-        courses,
-      ]);
+      await query(INSERT_STUDENT_QUERY, [result.insertId, level, courses]);
     } catch (err) {
       await query(DELETE_ACCOUNT_FROM_ACCOUNT_ID_QUERY, [result.insertId]);
       console.error(err);
@@ -176,7 +169,6 @@ async function adminUpdateAccount(accountDetails) {
     cpf,
     institution,
     status,
-    end_date,
     level,
     coursesIds,
   } = accountDetails;
@@ -234,12 +226,12 @@ async function adminUpdateAccount(accountDetails) {
     if (studentExists.length > 0) {
       queries.push({
         queryString: UPDATE_STUDENT_QUERY,
-        params: [end_date, level, courses, accountId],
+        params: [level, courses, accountId],
       });
     } else {
       queries.push({
         queryString: INSERT_STUDENT_QUERY,
-        params: [accountId, end_date, level, courses],
+        params: [accountId, level, courses],
       });
     }
   } else {

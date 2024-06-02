@@ -158,14 +158,6 @@ export default function Signup() {
 
         {isStudent && (
           <>
-            <label htmlFor="end_date">Validade da Conta</label>
-            <input
-              type="date"
-              id="end_date"
-              name="end_date"
-              autoComplete="off"
-              required
-            />
             <datalist id="levelList">
               <option
                 key={1}

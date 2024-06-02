@@ -93,6 +93,7 @@ form label {
   margin-top: 1rem;
 }
 
+form fieldset,
 form input {
   border: none;
   padding: 0.5rem;

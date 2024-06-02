@@ -37,7 +37,13 @@ export default function Update() {
       const data = await response.json();
       const result = data["result"];
       if (result.is_student == 1) {
-        getStudentCourses(result.courses);
+        let courses;
+        if (!typeof result.courses == "object") {
+          courses = JSON.parse(result.courses);
+        } else {
+          courses = result.courses;
+        }
+        getStudentCourses(courses);
       }
 
       setUserInfo(result);
@@ -80,9 +86,11 @@ export default function Update() {
     }
   }
 
-  const getStudentCourses = (coursesIds) => {
+  const getStudentCourses = (coursesIdsRaw) => {
+    const coursesIds = JSON.parse(coursesIdsRaw);
+
     const filteredCourses = registeredCourses.filter((course) =>
-      coursesIds.includes(String(course.id))
+      coursesIds.some((obj) => obj.id === course.id)
     );
 
     const courses = filteredCourses.map((course) => ({
@@ -100,7 +108,7 @@ export default function Update() {
     for (const courseObj of courses) {
       const courseStr = `${courseObj.id}, ${courseObj.course}, ${courseObj.class}`;
       const selectedCourseParts = courseStr.split(",");
-      const id = parseInt(selectedCourseParts[0], 10);
+      const id = selectedCourseParts[0];
       const course = selectedCourseParts[1];
       const c_class = selectedCourseParts[2];
 
@@ -117,7 +125,7 @@ export default function Update() {
 
   const addCourse = () => {
     const selectedCourseParts = selectedCourse.split(",");
-    const id = parseInt(selectedCourseParts[0], 10);
+    const id = selectedCourseParts[0];
     const course = selectedCourseParts[1];
     const c_class = selectedCourseParts[2];
     setSelectedCourse("");
@@ -282,15 +290,6 @@ export default function Update() {
 
         {isStudent && (
           <>
-            <label htmlFor="birth_date">Validade da Conta</label>
-            <input
-              type="date"
-              id="end_date"
-              name="end_date"
-              defaultValue={convertDateFormat(userInfo.end_date) || ""}
-              autoComplete="off"
-              required
-            />
             <label htmlFor="level">Nível</label>
             <input
               type="text"
