@@ -9,6 +9,7 @@ export default function Update() {
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [coursesIds, setCoursesIds] = useState([]);
+  const [userRecipients, setUserRecipients] = useState([]);
 
   const handleClearForm = () => {
     setUserInfo({});
@@ -23,6 +24,31 @@ export default function Update() {
     const form = document.querySelector(".user-search");
     form.classList.remove("hidden");
   };
+
+  class User {
+    constructor(id, full_name, cpf) {
+      this.id = id;
+      this.full_name = full_name;
+      this.cpf = cpf;
+    }
+  }
+
+  async function getUserRecipients() {
+    const resUsers = await fetch("/api/v1/admin/account/accounts", {
+      method: "GET",
+    });
+
+    if (resUsers.status === 200) {
+      const data = await resUsers.json();
+      const users = [];
+
+      for (const user of data.info) {
+        users.push(new User(user.id, user.full_name, user.cpf));
+      }
+
+      setUserRecipients(users);
+    }
+  }
 
   async function onSubmitAccountInfo(event) {
     event.preventDefault();
@@ -77,6 +103,10 @@ export default function Update() {
   useEffect(() => {
     setStatus(userInfo.status);
   }, [userInfo]);
+
+  useEffect(() => {
+    getUserRecipients();
+  }, []);
 
   class Course {
     constructor(id, course, classStr) {
@@ -167,8 +197,18 @@ export default function Update() {
         id="account-info-form"
       >
         <label htmlFor="cpf">CPF do Usuário</label>
+        <datalist id="usersList">
+          {userRecipients.map((user) => {
+            return (
+              <option key={user.id} value={user.cpf}>
+                {`${user.full_name} (${user.cpf})`}
+              </option>
+            );
+          })}
+        </datalist>
         <input
-          type="text"
+          type="list"
+          list="usersList"
           id="cpf"
           name="cpf"
           pattern="\d{11}"
