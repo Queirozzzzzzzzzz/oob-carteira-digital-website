@@ -339,6 +339,10 @@ async function getDatabaseCourses(coursesIds) {
       id: c.id,
       course: c.course,
       class: c.class,
+      enter_time: c.enter_time,
+      leave_time: c.leave_time,
+      end_date: c.end_date,
+      days: c.days,
     });
   }
 
