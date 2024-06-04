@@ -295,7 +295,7 @@ async function updatePassword(password, cpf) {
     const result = await query(UPDATE_PASSWORD_QUERY, [hashedPassword, cpf]);
     return result;
   } catch (err) {
-    console.err(err.message);
+    console.error(err);
     throw err;
   }
 }
