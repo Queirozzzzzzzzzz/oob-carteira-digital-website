@@ -8,12 +8,12 @@ export default async function Forgot(req, res) {
     var success = 400;
     var result = "E-mail inválido!";
 
-    if (text) {
+    const email = sendEmail(to, subject, text);
+
+    if (email) {
       success = 200;
       result = "E-mail enviado!";
     }
-
-    sendEmail(to, subject, text);
 
     res.status(success).json(result);
   } catch (err) {
