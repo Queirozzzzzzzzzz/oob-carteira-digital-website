@@ -262,6 +262,7 @@ export default function Update() {
           name="email"
           defaultValue={userInfo.email || ""}
           autoComplete="off"
+          readOnly
           required
         />
 

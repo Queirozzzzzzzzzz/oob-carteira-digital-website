@@ -138,27 +138,32 @@ async function addAccount(accountDetails) {
 
   const hashedPassword = await bcrypt.hash(password, passwordSaltRounds);
 
-  const result = await query(INSERT_ACCOUNT_QUERY, [
-    isAdmin,
-    isStudent,
-    full_name,
-    email,
-    hashedPassword,
-    birth_date,
-    cpf,
-    registration,
-    institution,
-    status,
-  ]);
+  try {
+    const result = await query(INSERT_ACCOUNT_QUERY, [
+      isAdmin,
+      isStudent,
+      full_name,
+      email,
+      hashedPassword,
+      birth_date,
+      cpf,
+      registration,
+      institution,
+      status,
+    ]);
 
-  if (isStudent == "1") {
-    try {
-      await query(INSERT_STUDENT_QUERY, [result.insertId, level, courses]);
-    } catch (err) {
-      await query(DELETE_ACCOUNT_FROM_ACCOUNT_ID_QUERY, [result.insertId]);
-      console.error(err);
-      return "Não foi possível criar a conta de estudante.";
+    if (isStudent == "1") {
+      try {
+        await query(INSERT_STUDENT_QUERY, [result.insertId, level, courses]);
+      } catch (err) {
+        await query(DELETE_ACCOUNT_FROM_ACCOUNT_ID_QUERY, [result.insertId]);
+        console.error(err);
+        return "Não foi possível criar a conta de estudante.";
+      }
     }
+  } catch (err) {
+    console.log(err.code);
+    return "Não foi possível criar a conta.";
   }
 
   return "Conta criada com sucesso!";
