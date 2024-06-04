@@ -73,7 +73,7 @@ export default function Update() {
       }
 
       setUserInfo(result);
-      setIsStudent(!!result.registration);
+      setIsStudent(!!result.is_student);
       setIsAdmin(!!result.is_admin);
       hideAccountInfoForm();
     } catch (err) {

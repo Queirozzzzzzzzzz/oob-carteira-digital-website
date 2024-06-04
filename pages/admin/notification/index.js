@@ -205,7 +205,6 @@ export default function Notification(req, res) {
           autoComplete="off"
           required
         ></textarea>
-        <button type="submit">Enviar</button>
         <h2>Destinatários: </h2>
         <div id="label-subtitle">
           <label htmlFor="">Classes:</label>
@@ -292,6 +291,8 @@ export default function Notification(req, res) {
             </ul>
           </>
         )}
+
+        <button type="submit">Enviar</button>
       </form>
     </>
   );

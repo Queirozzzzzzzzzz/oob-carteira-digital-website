@@ -5,10 +5,13 @@ export async function middleware(req, res) {
   const pathname = req.nextUrl.pathname;
   const isRootPath = pathname === "/";
   const isSigninPath = pathname === "/api/v1/auth/signin";
+  const isPasswordResetPath =
+    pathname === "/api/v1/password/forgot" ||
+    pathname === "/api/v1/password/forgot/login";
   const isAdminPath =
     pathname.startsWith("/admin/") || pathname.startsWith("/api/v1/admin");
 
-  if (isSigninPath) return NextResponse.next();
+  if (isSigninPath || isPasswordResetPath) return NextResponse.next();
 
   try {
     const token = req.cookies.toString().replace("token=", "");

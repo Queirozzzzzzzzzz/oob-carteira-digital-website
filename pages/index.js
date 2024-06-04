@@ -8,9 +8,13 @@ export default function Login() {
       body: new URLSearchParams({ cpf, password }),
     });
 
-    const response = await result.json();
-    if (response.admin_logged) {
-      window.location.href = window.location.href;
+    try {
+      const response = await result.json();
+      if (response.admin_logged) {
+        window.location.href = window.location.href;
+      }
+    } catch (err) {
+      alert("Login inválido.");
     }
   }
 

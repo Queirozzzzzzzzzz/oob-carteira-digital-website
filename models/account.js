@@ -7,6 +7,7 @@ const passwordSaltRounds = 10;
 const SELECT_ACCOUNT_FROM_CPF_QUERY = "SELECT * FROM account WHERE cpf = ?;";
 const SELECT_ACCOUNTS_INFO_QUERY =
   "SELECT student.*, account.* FROM account LEFT JOIN student ON account.id = student.account_id;";
+const SELECT_ACCOUNT_BY_EMAIL_QUERY = "SELECT * FROM account WHERE email = ?;";
 const SELECT_STUDENTS_INFO_QUERY =
   "SELECT student.*, account.* FROM student LEFT JOIN account ON account_id = account.id;";
 const SELECT_INFO_BY_CPF_QUERY = `
@@ -55,6 +56,11 @@ async function getAccountsInfo() {
   });
 
   return info;
+}
+
+async function getAccountByEmail(email) {
+  const account = await query(SELECT_ACCOUNT_BY_EMAIL_QUERY, [email]);
+  return account[0];
 }
 
 async function getStudentsInfo() {
@@ -258,17 +264,9 @@ async function adminUpdateAccount(accountDetails) {
 }
 
 async function updateAccount(accountDetails, payload) {
-  const { email, password, picture } = accountDetails;
+  const { email, picture } = accountDetails;
 
   const queries = [];
-
-  if (password) {
-    const hashedPassword = await bcrypt.hash(password, passwordSaltRounds);
-    queries.push({
-      queryString: UPDATE_PASSWORD_QUERY,
-      params: [hashedPassword, payload.cpf],
-    });
-  }
 
   queries.push({
     queryString: UPDATE_ACCOUNT_NON_ADMIN_QUERY,
@@ -291,6 +289,17 @@ async function updateAccount(accountDetails, payload) {
   return "Conta atualizada com sucesso!";
 }
 
+async function updatePassword(password, cpf) {
+  try {
+    const hashedPassword = await bcrypt.hash(password, passwordSaltRounds);
+    const result = await query(UPDATE_PASSWORD_QUERY, [hashedPassword, cpf]);
+    return result;
+  } catch (err) {
+    console.err(err.message);
+    throw err;
+  }
+}
+
 async function signin(cpf, password) {
   let account = await query(SELECT_ACCOUNT_FROM_CPF_QUERY, [cpf]);
 
@@ -305,7 +314,6 @@ async function signin(cpf, password) {
     return "Esta conta está suspensa ou inativa.";
 
   await query(UPDATE_LAST_LOGIN_QUERY, [cpf]);
-  account = await query(SELECT_ACCOUNT_FROM_CPF_QUERY, [cpf]);
   return account[0];
 }
 
@@ -351,11 +359,13 @@ async function getDatabaseCourses(coursesIds) {
 
 module.exports = {
   getAccountsInfo,
+  getAccountByEmail,
   getStudentsInfo,
   getInfo,
   getCoursesIds,
   addAccount,
   adminUpdateAccount,
   updateAccount,
+  updatePassword,
   signin,
 };
